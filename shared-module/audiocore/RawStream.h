@@ -35,8 +35,9 @@
 typedef struct {
     mp_obj_base_t base;
     uint8_t *buffer;
-    uint8_t *second_buffer;
+    uint8_t *next_buffer;
     uint32_t len;
+    uint32_t next_len;
     uint8_t bits_per_sample;
     bool samples_signed;
     uint8_t channel_count;
