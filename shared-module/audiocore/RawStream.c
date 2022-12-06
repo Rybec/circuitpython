@@ -125,3 +125,35 @@ void audioio_rawstream_get_buffer_structure(audioio_rawstream_obj_t *self, bool 
         *spacing = 1;
     }
 }
+
+
+bool audioio_rawstream_is_ready(audioio_rawstream_obj_t *self) {
+    return self->next_buffer == NULL;
+}
+
+
+bool audioio_rawstream_queue_audio(audioio_rawstream_obj_t *self,
+    uint8_t *buffer,
+    uint32_t buffer_length) {
+    if (self->next_buffer) {
+        // Maybe raise an exception here instead?
+        // I'm not sure how to do that, and it would
+        // probably need a new exception type.
+        // Maybe something like "buffer full"?
+        // What would use less CPU time, handling
+        // an exception raised here or waiting for
+        // the next iteration of the buffer write
+        // code?  Ideally, we want to minimize time,
+        // to avoid a situation where a failure to
+        // queue  allows enough time to go
+        // by for the buffer and the queue to finish
+        // before the next attempt.  I suspect
+        // returning a bool is the faster option.
+        return false;
+    }
+
+    self->next_buffer = buffer;
+    self->next_buffer_len = buffer_length;
+
+    return true;
+}
