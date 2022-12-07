@@ -92,6 +92,15 @@ audioio_get_buffer_result_t audioio_rawstream_get_buffer(audioio_rawstream_obj_t
         // once a buffer is done playing,
         // the GC picks it up if it isn't
         // used somewhere else.
+
+        // It might be better to play back
+        // silence when the buffer is empty
+        // so that the user doesn't have
+        // constantly check if it is done
+        // in case some delay prevented it
+        // from writing soon enough.  Maybe
+        // stopping should only happen
+        // explicitly...
         self->buffer = NULL;
         self->len = 0;
 
