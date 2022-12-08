@@ -28,12 +28,13 @@
 #ifndef MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSAMPLE_H
 #define MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSAMPLE_H
 
-#include "shared-module/audiocore/RawSample.h"
+#include "shared-module/audiostream/RawStream.h"
 
-extern const mp_obj_type_t audioio_rawsample_type;
+extern const mp_obj_type_t audioio_rawstream_type;
 
-void common_hal_audioio_rawsample_construct(audioio_rawsample_obj_t *self,
-    uint8_t *buffer, uint32_t len, uint8_t bytes_per_sample, bool samples_signed,
+// Should this go in shared-module's header file?
+void common_hal_audioio_rawstream_construct(audioio_rawstream_obj_t *self,
+    uint8_t bytes_per_sample, bool samples_signed,
     uint8_t channel_count, uint32_t sample_rate);
 
 void common_hal_audioio_rawsample_deinit(audioio_rawsample_obj_t *self);

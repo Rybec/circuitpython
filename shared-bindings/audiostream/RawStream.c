@@ -71,29 +71,24 @@
 //|           time.sleep(1)
 //|           dac.stop()"""
 //|         ...
-STATIC mp_obj_t audioio_rawsample_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
-    enum { ARG_buffer, ARG_channel_count, ARG_sample_rate };
+STATIC mp_obj_t audioio_rawstream_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
+    enum { ARG_channel_count, ARG_sample_rate, ARG_bytes_per_sample, ARG_signed_samples };
     static const mp_arg_t allowed_args[] = {
-        { MP_QSTR_buffer, MP_ARG_OBJ | MP_ARG_REQUIRED },
         { MP_QSTR_channel_count, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 1 } },
         { MP_QSTR_sample_rate, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 8000} },
+        { MP_QSTR_bytes_per_sample, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 2} },
+        { MP_QSTR_signed_sampes, MP_ARG_BOOL | MP_ARG_KW_ONLY, {.u_bool = false} },
     };
     mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
     mp_arg_parse_all_kw_array(n_args, n_kw, all_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
-    audioio_rawsample_obj_t *self = m_new_obj(audioio_rawsample_obj_t);
-    self->base.type = &audioio_rawsample_type;
-    mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(args[ARG_buffer].u_obj, &bufinfo, MP_BUFFER_READ);
-    uint8_t bytes_per_sample = 1;
-    bool signed_samples = bufinfo.typecode == 'b' || bufinfo.typecode == 'h';
-    if (bufinfo.typecode == 'h' || bufinfo.typecode == 'H') {
-        bytes_per_sample = 2;
-    } else if (bufinfo.typecode != 'b' && bufinfo.typecode != 'B' && bufinfo.typecode != BYTEARRAY_TYPECODE) {
-        mp_raise_ValueError_varg(translate("%q must be a bytearray or array of type 'h', 'H', 'b', or 'B'"), MP_QSTR_buffer);
-    }
-    common_hal_audioio_rawsample_construct(self, ((uint8_t *)bufinfo.buf), bufinfo.len,
-        bytes_per_sample, signed_samples, args[ARG_channel_count].u_int,
+    audioio_rawstream_obj_t *self = m_new_obj(audioio_rawstream_obj_t);
+    self->base.type = &audioio_rawstream_type;
+
+    common_hal_audioio_rawstream_construct(self,
+        args[ARG_bytes_per_sample].u_int,
+        args[ARG_signed_samples].u_bool,
+        args[ARG_channel_count].u_int,
         args[ARG_sample_rate].u_int);
 
     return MP_OBJ_FROM_PTR(self);
