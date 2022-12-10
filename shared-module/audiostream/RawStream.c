@@ -141,7 +141,7 @@ bool audioio_rawstream_is_ready(audioio_rawstream_obj_t *self) {
 }
 
 
-bool audioio_rawstream_queue_audio(audioio_rawstream_obj_t *self,
+bool audioio_rawstream_queue_sample(audioio_rawstream_obj_t *self,
     uint8_t *buffer,
     uint32_t buffer_length) {
     if (self->next_buffer) {
