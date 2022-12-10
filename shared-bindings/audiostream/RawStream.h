@@ -37,11 +37,11 @@ void common_hal_audioio_rawstream_construct(audioio_rawstream_obj_t *self,
     uint8_t bytes_per_sample, bool samples_signed,
     uint8_t channel_count, uint32_t sample_rate);
 
-void common_hal_audioio_rawsample_deinit(audioio_rawsample_obj_t *self);
-bool common_hal_audioio_rawsample_deinited(audioio_rawsample_obj_t *self);
-uint32_t common_hal_audioio_rawsample_get_sample_rate(audioio_rawsample_obj_t *self);
-uint8_t common_hal_audioio_rawsample_get_bits_per_sample(audioio_rawsample_obj_t *self);
-uint8_t common_hal_audioio_rawsample_get_channel_count(audioio_rawsample_obj_t *self);
-void common_hal_audioio_rawsample_set_sample_rate(audioio_rawsample_obj_t *self, uint32_t sample_rate);
+void common_hal_audioio_rawstream_deinit(audioio_rawstream_obj_t *self);
+bool common_hal_audioio_rawstream_deinited(audioio_rawstream_obj_t *self);
+uint32_t common_hal_audioio_rawstream_get_sample_rate(audioio_rawstream_obj_t *self);
+uint8_t common_hal_audioio_rawstream_get_bits_per_sample(audioio_rawstream_obj_t *self);
+uint8_t common_hal_audioio_rawstream_get_channel_count(audioio_rawstream_obj_t *self);
+void common_hal_audioio_rawstream_set_sample_rate(audioio_rawstream_obj_t *self, uint32_t sample_rate);
 
 #endif // MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSAMPLE_H
