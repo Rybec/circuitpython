@@ -32,7 +32,7 @@
 #include "py/objproperty.h"
 #include "py/runtime.h"
 #include "shared-bindings/util.h"
-#include "shared-bindings/audiocore/RawSample.h"
+#include "shared-bindings/audiostream/RawStream.h"
 #include "supervisor/shared/translate/translate.h"
 
 //| class RawSample:
@@ -147,6 +147,32 @@ STATIC mp_obj_t audioio_rawstream_obj_set_sample_rate(mp_obj_t self_in, mp_obj_t
 }
 MP_DEFINE_CONST_FUN_OBJ_2(audioio_rawstream_set_sample_rate_obj, audioio_rawstream_obj_set_sample_rate);
 
+
+STATIC mp_obj_t audioio_rawstream_obj_is_ready(mp_obj_t self_in) {
+    audioio_rawstream_obj_t *self = MP_OBJ_TO_PTR(self_in);
+    return MP_OBJ_NEW_BOOL(common_hal_audioio_rawstream_is_ready(self));
+
+}
+MP_DEFINE_CONST_FUN_OBJ_1(audioio_rawstream_is_ready_obj, audioio_rawstream_obj_is_ready);
+
+STATIC mp_obj_t audioio_rawstream_obj_queue_sample(mp_obj_t self_in, mp_obj_t buffer) {
+    audioio_rawstream_obj_t *self = MP_OBJ_TO_PTR(self_in);
+    mp_buffer_info_t bufinfo;
+    mp_get_buffer_raise(buffer.u_obj, &bufinfo, MP_BUFFER_READ);
+    if ((bufinto.typecode == 'b' || bufinfo.typecode == 'h') != self->signed_samples) {
+        mp_raise_ValueError_varg(translate("%q must have the same sign as the RawStream object"), buffer);
+    }
+    if (((bufinfo.typecode == 'h' || bufinfo.typecode == 'H') && self->bytes_per_sample != 2) ||
+        ((bufinfo.typecode == 'b' || bufinfo.typecode == 'B') && self->bytes_per_sample != 1)) {
+        mp_raise_ValueError_varg(translate("%q must have the same byte width as the RawSample object"), buffer);
+    }
+
+    return MP_OBJ_NEW_BOOL(common_hal_audioio_rawstream_queue_sample(self, ((uint8_t *)bufinfo.buf), bufinfo.len));
+}
+MP_DEFINE_CONST_FUN_OBJ_2(audioio_rawstream_queue_sample_obj, audioio_rawstream_obj_queue_sample);
+
+
+
 MP_PROPERTY_GETSET(audioio_rawstream_sample_rate_obj,
     (mp_obj_t)&audioio_rawstream_get_sample_rate_obj,
     (mp_obj_t)&audioio_rawstream_set_sample_rate_obj);
@@ -156,6 +182,9 @@ STATIC const mp_rom_map_elem_t audioio_rawstream_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_deinit), MP_ROM_PTR(&audioio_rawstream_deinit_obj) },
     { MP_ROM_QSTR(MP_QSTR___enter__), MP_ROM_PTR(&default___enter___obj) },
     { MP_ROM_QSTR(MP_QSTR___exit__), MP_ROM_PTR(&audioio_rawstream___exit___obj) },
+
+    { MP_ROM_QSTR(MP_QSTR_is_ready), MP_ROM_PTR(&audioio_rawstream_is_ready_obj) },
+    { MP_ROM_QSTR(MP_QSTR_queue_sample), MP_ROM_PTR(&audioio_rawstream_queue_sample_obj) },
 
     // Properties
     { MP_ROM_QSTR(MP_QSTR_sample_rate), MP_ROM_PTR(&audioio_rawstream_sample_rate_obj) },
