@@ -97,15 +97,15 @@ STATIC mp_obj_t audioio_rawstream_make_new(const mp_obj_type_t *type, size_t n_a
 //|     def deinit(self) -> None:
 //|         """Deinitialises the RawSample and releases any hardware resources for reuse."""
 //|         ...
-STATIC mp_obj_t audioio_rawsample_deinit(mp_obj_t self_in) {
-    audioio_rawsample_obj_t *self = MP_OBJ_TO_PTR(self_in);
-    common_hal_audioio_rawsample_deinit(self);
+STATIC mp_obj_t audioio_rawstream_deinit(mp_obj_t self_in) {
+    audioio_rawstream_obj_t *self = MP_OBJ_TO_PTR(self_in);
+    common_hal_audioio_rawstream_deinit(self);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_1(audioio_rawsample_deinit_obj, audioio_rawsample_deinit);
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(audioio_rawstream_deinit_obj, audioio_rawstream_deinit);
 
-STATIC void check_for_deinit(audioio_rawsample_obj_t *self) {
-    if (common_hal_audioio_rawsample_deinited(self)) {
+STATIC void check_for_deinit(audioio_rawstream_obj_t *self) {
+    if (common_hal_audioio_rawstream_deinited(self)) {
         raise_deinited_error();
     }
 }
@@ -119,12 +119,12 @@ STATIC void check_for_deinit(audioio_rawsample_obj_t *self) {
 //|         """Automatically deinitializes the hardware when exiting a context. See
 //|         :ref:`lifetime-and-contextmanagers` for more info."""
 //|         ...
-STATIC mp_obj_t audioio_rawsample_obj___exit__(size_t n_args, const mp_obj_t *args) {
+STATIC mp_obj_t audioio_rawstream_obj___exit__(size_t n_args, const mp_obj_t *args) {
     (void)n_args;
-    common_hal_audioio_rawsample_deinit(args[0]);
+    common_hal_audioio_rawstream_deinit(args[0]);
     return mp_const_none;
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(audioio_rawsample___exit___obj, 4, 4, audioio_rawsample_obj___exit__);
+STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(audioio_rawstream___exit___obj, 4, 4, audioio_rawstream_obj___exit__);
 
 //|     sample_rate: Optional[int]
 //|     """32 bit value that dictates how quickly samples are played in Hertz (cycles per second).
@@ -132,53 +132,53 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(audioio_rawsample___exit___obj, 4, 4,
 //|     sample. This will not change the sample rate of any active playback. Call ``play`` again to
 //|     change it."""
 //|
-STATIC mp_obj_t audioio_rawsample_obj_get_sample_rate(mp_obj_t self_in) {
-    audioio_rawsample_obj_t *self = MP_OBJ_TO_PTR(self_in);
+STATIC mp_obj_t audioio_rawstream_obj_get_sample_rate(mp_obj_t self_in) {
+    audioio_rawstream_obj_t *self = MP_OBJ_TO_PTR(self_in);
     check_for_deinit(self);
-    return MP_OBJ_NEW_SMALL_INT(common_hal_audioio_rawsample_get_sample_rate(self));
+    return MP_OBJ_NEW_SMALL_INT(common_hal_audioio_rawstream_get_sample_rate(self));
 }
-MP_DEFINE_CONST_FUN_OBJ_1(audioio_rawsample_get_sample_rate_obj, audioio_rawsample_obj_get_sample_rate);
+MP_DEFINE_CONST_FUN_OBJ_1(audioio_rawstream_get_sample_rate_obj, audioio_rawstream_obj_get_sample_rate);
 
-STATIC mp_obj_t audioio_rawsample_obj_set_sample_rate(mp_obj_t self_in, mp_obj_t sample_rate) {
-    audioio_rawsample_obj_t *self = MP_OBJ_TO_PTR(self_in);
+STATIC mp_obj_t audioio_rawstream_obj_set_sample_rate(mp_obj_t self_in, mp_obj_t sample_rate) {
+    audioio_rawstream_obj_t *self = MP_OBJ_TO_PTR(self_in);
     check_for_deinit(self);
-    common_hal_audioio_rawsample_set_sample_rate(self, mp_obj_get_int(sample_rate));
+    common_hal_audioio_rawstream_set_sample_rate(self, mp_obj_get_int(sample_rate));
     return mp_const_none;
 }
-MP_DEFINE_CONST_FUN_OBJ_2(audioio_rawsample_set_sample_rate_obj, audioio_rawsample_obj_set_sample_rate);
+MP_DEFINE_CONST_FUN_OBJ_2(audioio_rawstream_set_sample_rate_obj, audioio_rawstream_obj_set_sample_rate);
 
-MP_PROPERTY_GETSET(audioio_rawsample_sample_rate_obj,
-    (mp_obj_t)&audioio_rawsample_get_sample_rate_obj,
-    (mp_obj_t)&audioio_rawsample_set_sample_rate_obj);
+MP_PROPERTY_GETSET(audioio_rawstream_sample_rate_obj,
+    (mp_obj_t)&audioio_rawstream_get_sample_rate_obj,
+    (mp_obj_t)&audioio_rawstream_set_sample_rate_obj);
 
-STATIC const mp_rom_map_elem_t audioio_rawsample_locals_dict_table[] = {
+STATIC const mp_rom_map_elem_t audioio_rawstream_locals_dict_table[] = {
     // Methods
-    { MP_ROM_QSTR(MP_QSTR_deinit), MP_ROM_PTR(&audioio_rawsample_deinit_obj) },
+    { MP_ROM_QSTR(MP_QSTR_deinit), MP_ROM_PTR(&audioio_rawstream_deinit_obj) },
     { MP_ROM_QSTR(MP_QSTR___enter__), MP_ROM_PTR(&default___enter___obj) },
-    { MP_ROM_QSTR(MP_QSTR___exit__), MP_ROM_PTR(&audioio_rawsample___exit___obj) },
+    { MP_ROM_QSTR(MP_QSTR___exit__), MP_ROM_PTR(&audioio_rawstream___exit___obj) },
 
     // Properties
-    { MP_ROM_QSTR(MP_QSTR_sample_rate), MP_ROM_PTR(&audioio_rawsample_sample_rate_obj) },
+    { MP_ROM_QSTR(MP_QSTR_sample_rate), MP_ROM_PTR(&audioio_rawstream_sample_rate_obj) },
 };
-STATIC MP_DEFINE_CONST_DICT(audioio_rawsample_locals_dict, audioio_rawsample_locals_dict_table);
+STATIC MP_DEFINE_CONST_DICT(audioio_rawstream_locals_dict, audioio_rawstream_locals_dict_table);
 
-STATIC const audiosample_p_t audioio_rawsample_proto = {
+STATIC const audiosample_p_t audioio_rawstream_proto = {
     MP_PROTO_IMPLEMENT(MP_QSTR_protocol_audiosample)
-    .sample_rate = (audiosample_sample_rate_fun)common_hal_audioio_rawsample_get_sample_rate,
-    .bits_per_sample = (audiosample_bits_per_sample_fun)common_hal_audioio_rawsample_get_bits_per_sample,
-    .channel_count = (audiosample_channel_count_fun)common_hal_audioio_rawsample_get_channel_count,
-    .reset_buffer = (audiosample_reset_buffer_fun)audioio_rawsample_reset_buffer,
-    .get_buffer = (audiosample_get_buffer_fun)audioio_rawsample_get_buffer,
-    .get_buffer_structure = (audiosample_get_buffer_structure_fun)audioio_rawsample_get_buffer_structure,
+    .sample_rate = (audiosample_sample_rate_fun)common_hal_audioio_rawstream_get_sample_rate,
+    .bits_per_sample = (audiosample_bits_per_sample_fun)common_hal_audioio_rawstream_get_bits_per_sample,
+    .channel_count = (audiosample_channel_count_fun)common_hal_audioio_rawstream_get_channel_count,
+    .reset_buffer = (audiosample_reset_buffer_fun)audioio_rawstream_reset_buffer,
+    .get_buffer = (audiosample_get_buffer_fun)audioio_rawstream_get_buffer,
+    .get_buffer_structure = (audiosample_get_buffer_structure_fun)audioio_rawstream_get_buffer_structure,
 };
 
-const mp_obj_type_t audioio_rawsample_type = {
+const mp_obj_type_t audioio_rawstream_type = {
     { &mp_type_type },
-    .name = MP_QSTR_RawSample,
+    .name = MP_QSTR_RawStream,
     .flags = MP_TYPE_FLAG_EXTENDED,
-    .make_new = audioio_rawsample_make_new,
-    .locals_dict = (mp_obj_dict_t *)&audioio_rawsample_locals_dict,
+    .make_new = audioio_rawstream_make_new,
+    .locals_dict = (mp_obj_dict_t *)&audioio_rawstream_locals_dict,
     MP_TYPE_EXTENDED_FIELDS(
-        .protocol = &audioio_rawsample_proto,
+        .protocol = &audioio_rawstream_proto,
         ),
 };
