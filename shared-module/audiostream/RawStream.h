@@ -45,6 +45,11 @@ typedef struct {
 } audioio_rawstream_obj_t;
 
 
+bool audioio_rawstream_is_ready(audioio_rawstream_obj_t *self);
+bool audioio_rawstream_queue_sample(audioio_rawstream_obj_t *self,
+    uint8_t *buffer,
+    uint32_t buffer_length);
+
 // These are not available from Python because it may be called in an interrupt.
 void audioio_rawstream_reset_buffer(audioio_rawstream_obj_t *self,
     bool single_channel_output,
