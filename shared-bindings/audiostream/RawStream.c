@@ -159,11 +159,11 @@ STATIC mp_obj_t audioio_rawstream_obj_queue_sample(mp_obj_t self_in, mp_obj_t bu
     audioio_rawstream_obj_t *self = MP_OBJ_TO_PTR(self_in);
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(buffer.u_obj, &bufinfo, MP_BUFFER_READ);
-    if ((bufinto.typecode == 'b' || bufinfo.typecode == 'h') != self->signed_samples) {
+    if ((bufinfo.typecode == 'b' || bufinfo.typecode == 'h') != self->samples_signed) {
         mp_raise_ValueError_varg(translate("%q must have the same sign as the RawStream object"), buffer);
     }
-    if (((bufinfo.typecode == 'h' || bufinfo.typecode == 'H') && self->bytes_per_sample != 2) ||
-        ((bufinfo.typecode == 'b' || bufinfo.typecode == 'B') && self->bytes_per_sample != 1)) {
+    if (((bufinfo.typecode == 'h' || bufinfo.typecode == 'H') && self->bits_per_sample != 16) ||
+        ((bufinfo.typecode == 'b' || bufinfo.typecode == 'B') && self->bits_per_sample != 8)) {
         mp_raise_ValueError_varg(translate("%q must have the same byte width as the RawSample object"), buffer);
     }
 
