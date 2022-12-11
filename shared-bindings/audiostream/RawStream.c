@@ -77,7 +77,7 @@ STATIC mp_obj_t audioio_rawstream_make_new(const mp_obj_type_t *type, size_t n_a
         { MP_QSTR_channel_count, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 1 } },
         { MP_QSTR_sample_rate, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 8000} },
         { MP_QSTR_bytes_per_sample, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 2} },
-        { MP_QSTR_signed_sampes, MP_ARG_BOOL | MP_ARG_KW_ONLY, {.u_bool = false} },
+        { MP_QSTR_signed_samples, MP_ARG_BOOL | MP_ARG_KW_ONLY, {.u_bool = false} },
     };
     mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
     mp_arg_parse_all_kw_array(n_args, n_kw, all_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
@@ -150,7 +150,7 @@ MP_DEFINE_CONST_FUN_OBJ_2(audioio_rawstream_set_sample_rate_obj, audioio_rawstre
 
 STATIC mp_obj_t audioio_rawstream_obj_is_ready(mp_obj_t self_in) {
     audioio_rawstream_obj_t *self = MP_OBJ_TO_PTR(self_in);
-    return MP_OBJ_NEW_BOOL(common_hal_audioio_rawstream_is_ready(self));
+    return mp_obj_new_bool(audioio_rawstream_is_ready(self));
 
 }
 MP_DEFINE_CONST_FUN_OBJ_1(audioio_rawstream_is_ready_obj, audioio_rawstream_obj_is_ready);
@@ -158,7 +158,7 @@ MP_DEFINE_CONST_FUN_OBJ_1(audioio_rawstream_is_ready_obj, audioio_rawstream_obj_
 STATIC mp_obj_t audioio_rawstream_obj_queue_sample(mp_obj_t self_in, mp_obj_t buffer) {
     audioio_rawstream_obj_t *self = MP_OBJ_TO_PTR(self_in);
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(buffer.u_obj, &bufinfo, MP_BUFFER_READ);
+    mp_get_buffer_raise(buffer, &bufinfo, MP_BUFFER_READ);
     if ((bufinfo.typecode == 'b' || bufinfo.typecode == 'h') != self->samples_signed) {
         mp_raise_ValueError_varg(translate("%q must have the same sign as the RawStream object"), buffer);
     }
@@ -167,7 +167,7 @@ STATIC mp_obj_t audioio_rawstream_obj_queue_sample(mp_obj_t self_in, mp_obj_t bu
         mp_raise_ValueError_varg(translate("%q must have the same byte width as the RawSample object"), buffer);
     }
 
-    return MP_OBJ_NEW_BOOL(common_hal_audioio_rawstream_queue_sample(self, ((uint8_t *)bufinfo.buf), bufinfo.len));
+    return mp_obj_new_bool(audioio_rawstream_queue_sample(self, ((uint8_t *)bufinfo.buf), bufinfo.len));
 }
 MP_DEFINE_CONST_FUN_OBJ_2(audioio_rawstream_queue_sample_obj, audioio_rawstream_obj_queue_sample);
 

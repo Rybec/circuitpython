@@ -30,7 +30,7 @@
 
 #include "py/obj.h"
 
-#include "shared-module/audiocore/__init__.h"
+#include "shared-module/audiostream/__init__.h"
 
 typedef struct {
     mp_obj_base_t base;

@@ -25,8 +25,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSAMPLE_H
-#define MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSAMPLE_H
+#ifndef MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSTREAM_H
+#define MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSTREAM_H
 
 #include "shared-module/audiostream/RawStream.h"
 
@@ -44,4 +44,4 @@ uint8_t common_hal_audioio_rawstream_get_bits_per_sample(audioio_rawstream_obj_t
 uint8_t common_hal_audioio_rawstream_get_channel_count(audioio_rawstream_obj_t *self);
 void common_hal_audioio_rawstream_set_sample_rate(audioio_rawstream_obj_t *self, uint32_t sample_rate);
 
-#endif // MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSAMPLE_H
+#endif // MICROPY_INCLUDED_SHARED_BINDINGS_AUDIOIO_RAWSTREAM_H

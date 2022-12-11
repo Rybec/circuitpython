@@ -38,7 +38,7 @@
 
 STATIC const mp_rom_map_elem_t audiostream_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_audiostream) },
-    { MP_ROM_QSTR(MP_QSTR_RawSample), MP_ROM_PTR(&audioio_rawstream_type) },
+    { MP_ROM_QSTR(MP_QSTR_RawStream), MP_ROM_PTR(&audioio_rawstream_type) },
 };
 
 STATIC MP_DEFINE_CONST_DICT(audiostream_module_globals, audiostream_module_globals_table);

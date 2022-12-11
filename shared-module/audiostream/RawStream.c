@@ -25,11 +25,11 @@
  * THE SOFTWARE.
  */
 
-#include "shared-bindings/audiocore/RawSample.h"
+#include "shared-bindings/audiostream/RawStream.h"
 
 #include <stdint.h>
 
-#include "shared-module/audiocore/RawSample.h"
+#include "shared-module/audiostream/RawStream.h"
 
 void common_hal_audioio_rawstream_construct(audioio_rawstream_obj_t *self,
     uint8_t bytes_per_sample,
@@ -162,7 +162,7 @@ bool audioio_rawstream_queue_sample(audioio_rawstream_obj_t *self,
     }
 
     self->next_buffer = buffer;
-    self->next_buffer_len = buffer_length;
+    self->next_len = buffer_length;
 
     return true;
 }
