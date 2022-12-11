@@ -136,6 +136,9 @@ endif
 ifeq ($(CIRCUITPY_AUDIOMP3),1)
 SRC_PATTERNS += audiomp3/%
 endif
+ifeq ($(CIRCUITPY_AUDIOSTREAM),1)
+SRC_PATTERNS += audiostream/%
+endif
 ifeq ($(CIRCUITPY_BITBANGIO),1)
 SRC_PATTERNS += bitbangio/%
 endif
@@ -564,6 +567,8 @@ SRC_SHARED_MODULE_ALL = \
 	audiomp3/MP3Decoder.c \
 	audiomp3/__init__.c \
 	audiopwmio/__init__.c \
+	audiostream/__init__.c \
+	audiostream/RawStream.c \
 	bitbangio/I2C.c \
 	bitbangio/SPI.c \
 	bitbangio/__init__.c \
