@@ -27,8 +27,8 @@
 #include "shared-module/audioio/__init__.h"
 
 #include "py/obj.h"
-#include "shared-bindings/audiosample/RawStream.h"
-#include "shared-module/audiosample/RawStream.h"
+#include "shared-bindings/audiostream/RawStream.h"
+#include "shared-module/audiostream/RawStream.h"
 
 #include "shared-bindings/audiomixer/Mixer.h"
 #include "shared-module/audiomixer/Mixer.h"
