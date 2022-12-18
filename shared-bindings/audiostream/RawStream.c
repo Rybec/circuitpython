@@ -72,12 +72,13 @@
 //|           dac.stop()"""
 //|         ...
 STATIC mp_obj_t audioio_rawstream_make_new(const mp_obj_type_t *type, size_t n_args, size_t n_kw, const mp_obj_t *all_args) {
-    enum { ARG_channel_count, ARG_sample_rate, ARG_bytes_per_sample, ARG_signed_samples };
+    enum { ARG_channel_count, ARG_sample_rate, ARG_bytes_per_sample, ARG_signed_samples, ARG_persistent };
     static const mp_arg_t allowed_args[] = {
         { MP_QSTR_channel_count, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 1 } },
         { MP_QSTR_sample_rate, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 8000} },
         { MP_QSTR_bytes_per_sample, MP_ARG_INT | MP_ARG_KW_ONLY, {.u_int = 2} },
         { MP_QSTR_signed_samples, MP_ARG_BOOL | MP_ARG_KW_ONLY, {.u_bool = false} },
+        { MP_QSTR_persistent, MP_ARG_BOOL | MP_ARG_KW_ONLY, {.u_bool = true} },
     };
     mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
     mp_arg_parse_all_kw_array(n_args, n_kw, all_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
@@ -89,7 +90,8 @@ STATIC mp_obj_t audioio_rawstream_make_new(const mp_obj_type_t *type, size_t n_a
         args[ARG_bytes_per_sample].u_int,
         args[ARG_signed_samples].u_bool,
         args[ARG_channel_count].u_int,
-        args[ARG_sample_rate].u_int);
+        args[ARG_sample_rate].u_int,
+        args[ARG_persistent].u_bool);
 
     return MP_OBJ_FROM_PTR(self);
 }

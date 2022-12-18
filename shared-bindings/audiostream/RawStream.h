@@ -32,10 +32,11 @@
 
 extern const mp_obj_type_t audioio_rawstream_type;
 
-// Should this go in shared-module's header file?
+
 void common_hal_audioio_rawstream_construct(audioio_rawstream_obj_t *self,
     uint8_t bytes_per_sample, bool samples_signed,
-    uint8_t channel_count, uint32_t sample_rate);
+    uint8_t channel_count, uint32_t sample_rate,
+    bool persistent);
 
 void common_hal_audioio_rawstream_deinit(audioio_rawstream_obj_t *self);
 bool common_hal_audioio_rawstream_deinited(audioio_rawstream_obj_t *self);

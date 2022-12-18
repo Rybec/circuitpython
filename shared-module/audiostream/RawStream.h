@@ -42,6 +42,8 @@ typedef struct {
     bool samples_signed;
     uint8_t channel_count;
     uint32_t sample_rate;
+    bool persistent;
+    uint8_t *silence;
 } audioio_rawstream_obj_t;
 
 

@@ -31,11 +31,15 @@
 
 #include "shared-module/audiostream/RawStream.h"
 
+
+#define SILENCE_LEN 256
+
 void common_hal_audioio_rawstream_construct(audioio_rawstream_obj_t *self,
     uint8_t bytes_per_sample,
     bool samples_signed,
     uint8_t channel_count,
-    uint32_t sample_rate) {
+    uint32_t sample_rate,
+    bool persistent) {
 
     self->buffer = NULL;
     self->next_buffer = NULL;
@@ -47,6 +51,31 @@ void common_hal_audioio_rawstream_construct(audioio_rawstream_obj_t *self,
     self->samples_signed = samples_signed;
     self->channel_count = channel_count;
     self->sample_rate = sample_rate;
+
+    self->persistent = persistent;
+
+    if (persistent) {
+        self->silence = m_malloc(SILENCE_LEN, false);
+        if (self->silence == NULL) {
+            common_hal_audioio_rawstream_deinit(self);
+            m_malloc_fail(SILENCE_LEN);
+        }
+        for (uint16_t i = 0; i < SILENCE_LEN; i++) {
+            self->silence[i] = 0;
+        }
+    } else {
+        // We still need a small silence buffer to return
+        // when persistence is off and the buffer runs out.
+        self->silence = m_malloc(8, false);
+        if (self->silence == NULL) {
+            common_hal_audioio_rawstream_deinit(self);
+            m_malloc_fail(8);
+        }
+        for (uint16_t i = 0; i < 8; i++) {
+            self->silence[i] = 0;
+        }
+    }
+
 }
 
 void common_hal_audioio_rawstream_deinit(audioio_rawstream_obj_t *self) {
@@ -82,35 +111,22 @@ audioio_get_buffer_result_t audioio_rawstream_get_buffer(audioio_rawstream_obj_t
     uint8_t **buffer,
     uint32_t *buffer_length) {
 
+    audioio_get_buffer_result_t return_value = GET_BUFFER_MORE_DATA;
+
     if (self->next_buffer != NULL) {
-        // There's nothing left to play
-        // Send empty buffer?
-        // Not sure what to do here...
-
-        // Should we NULL out self->buffer
-        // here as well?  Probably, so that
-        // once a buffer is done playing,
-        // the GC picks it up if it isn't
-        // used somewhere else.
-
-        // It might be better to play back
-        // silence when the buffer is empty
-        // so that the user doesn't have
-        // constantly check if it is done
-        // in case some delay prevented it
-        // from writing soon enough.  Maybe
-        // stopping should only happen
-        // explicitly...
-        self->buffer = NULL;
-        self->len = 0;
-
-        return GET_BUFFER_DONE;
-    } else {
         self->buffer = self->next_buffer;
         self->len = self->next_len;
 
         self->next_buffer = NULL;
         self->next_len = 0;
+    } else {
+        self->buffer = self->silence;
+        if (self->persistent) {
+            self->len = SILENCE_LEN;
+        } else {
+            self->len = 8;
+            return_value = GET_BUFFER_DONE;
+        }
     }
 
     *buffer_length = self->len;
@@ -119,7 +135,8 @@ audioio_get_buffer_result_t audioio_rawstream_get_buffer(audioio_rawstream_obj_t
     } else {
         *buffer = self->buffer;
     }
-    return GET_BUFFER_MORE_DATA;
+
+    return return_value;
 }
 
 void audioio_rawstream_get_buffer_structure(audioio_rawstream_obj_t *self, bool single_channel_output,
